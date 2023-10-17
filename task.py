@@ -18,3 +18,12 @@ class Task:
     def change_task_description(self):
         new_description = input("Enter new description:").strip()
         self.description = new_description
+
+    def change_task_status(self):
+        if self.status == Status.PENDING:
+            self.status = Status.COMPLETED
+        else:
+            self.status = Status.PENDING
+    
+    def __str__(self) -> str:
+        return f"{"[ ]" if self.status == Status.PENDING else "[x]"} - {self.description}"

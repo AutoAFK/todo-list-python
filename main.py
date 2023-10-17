@@ -33,8 +33,14 @@ def edit_task(tasks: dict[Task]):
         print("Invalid input. Please enter a number.")
 
 
-def set_task_completed():
-    pass
+def set_task_completed(tasks):
+    show_tasks_with_id(tasks)
+    try:
+        user_input = int(input("Enter task id:"))
+        task = tasks[user_input]
+        task.change_task_status()
+    except:
+        print("Invalid input. Please enter a number.")
 
 
 # 4. show tasks
@@ -45,7 +51,7 @@ def show_tasks_with_id(tasks: dict[Task]):
 
 def display_as_todo_list(tasks: dict):
     for v in tasks.values():
-        print(f"[ ] - {v.description}")
+        print(f"{v}")
     os.system("pause")
 
 
@@ -58,6 +64,7 @@ def display_main_menu():
     print("2. Delete task")
     print("3. Edit task")
     print("4. View tasks")
+    print("5. Change task status")
     print("0. Exit")
 
 
@@ -75,7 +82,11 @@ if __name__ == "__main__":
                 edit_task(tasks)
             case "4":
                 display_as_todo_list(tasks)
+            case "5":
+                set_task_completed(tasks)
             case _:
                 print("Please enter a valid input.")
         display_main_menu()
         user_input = input("Enter your choice:").strip()
+    else:
+        print("\nThank you for using todo list python :)")
