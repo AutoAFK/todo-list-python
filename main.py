@@ -1,41 +1,56 @@
 # 1. add task
-def add_task(id_task, tasks):
+import os
+from task import Task
+
+
+def add_task(tasks):
     user_input = input("Enter task description:")
-    tasks[id_task] = user_input
+    task = Task(user_input)
+    tasks[task.id] = task
 
 
 # 2. delete task
 def delete_task(tasks):
+    show_tasks_with_id(tasks)
     try:
         user_input = int(input("Enter a task to delete:"))
+        del tasks[user_input]
     except ValueError:
         print("Invalid input. Please enter a number.")
-    del tasks[user_input]
 
 
 # 3. edit task
-def edit_task(tasks):
-    show_tasks(tasks)
+def edit_task(tasks: dict[Task]):
+    show_tasks_with_id(tasks)
     try:
         task_id = int(input("Enter task id:"))
+        if not (task_id in tasks.keys()):
+            print("The task id provided doesn't exists.")
+            return
+        task_to_edit: Task = tasks[task_id]
+        task_to_edit.change_task_description()
     except ValueError:
         print("Invalid input. Please enter a number.")
-    if not (task_id in tasks):
-        print("The task id provided doesn't exists.")
-        return
-    tasks[task_id] = input("Enter new task description:")
+
+
+def set_task_completed():
+    pass
 
 
 # 4. show tasks
-def show_tasks(tasks: dict):
+def show_tasks_with_id(tasks: dict[Task]):
     for key, value in tasks.items():
-        print(f"{key}. {value}")
+        print(f"{key}. {value.description}")
 
 
-if __name__ == "__main__":
-    tasks = {}
-    id_task = 1
+def display_as_todo_list(tasks: dict):
+    for v in tasks.values():
+        print(f"[ ] - {v.description}")
+    os.system("pause")
 
+
+def display_main_menu():
+    print("\033c", end="\033[A")
     print("Welcome to To-do list app")
     print("=========================")
     print("Choose one of the options:")
@@ -44,18 +59,23 @@ if __name__ == "__main__":
     print("3. Edit task")
     print("4. View tasks")
     print("0. Exit")
-    user_input = input("Enter your choice:")
+
+
+if __name__ == "__main__":
+    tasks = {}
+
+    user_input = ""
     while user_input != "0":
         match user_input:
             case "1":
-                add_task(id_task, tasks)
-                id_task += 1
+                add_task(tasks)
             case "2":
                 delete_task(tasks)
             case "3":
                 edit_task(tasks)
             case "4":
-                show_tasks(tasks)
+                display_as_todo_list(tasks)
             case _:
                 print("Please enter a valid input.")
-        user_input = input("Enter your choice:")
+        display_main_menu()
+        user_input = input("Enter your choice:").strip()
